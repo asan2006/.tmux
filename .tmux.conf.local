@@ -268,7 +268,7 @@ tmux_conf_theme_right_separator_sub='\uE0B3'  #   PowerlineSymbols.otf font, see
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_status_left=" ❐ #S | ↑#{?uptime_y, #{uptime_y}y,}#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} "
-tmux_conf_theme_status_right=" #{prefix}#{mouse}#{pairing}#{synchronized} , %H:%M:%S , %d %b , #{username}#{root} , #{wan_ip_v4}|#{gpu_usage}"
+tmux_conf_theme_status_right=" #{prefix}#{mouse}#{pairing}#{synchronized} , %H:%M:%S , %d %b , #{username}#{root} , #{lan_ip}|#{gpu_usage}"
 set -g status-interval 10
 
 # status left style
@@ -478,6 +478,17 @@ tmux_conf_uninstall_plugins_on_reload=true
 #   sleep 300                                         # sleep for 5 minutes, throttle network requests whatever the value of status-interval
 # }
 #
+# # get local ip actual used.
+# lan_ip() {
+#     local ip
+#     ip=$(ip route get 1 | awk '{print $7;exit}')
+#     if [ -n "$ip" ]; then
+#         echo "$ip"
+#     else
+#         echo "N/A"
+#     fi
+# }
+#
 # # GPU monitoring function for multiple GPUs with percentage
 # gpu_usage() {
 #   gpu_count=$(nvidia-smi --query-gpu=count --format=csv,noheader,nounits)
@@ -486,11 +497,11 @@ tmux_conf_uninstall_plugins_on_reload=true
 #   gpu_memory_total=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | awk '{sum+=$1} END {print sum}')
 #   gpu_memory_percentage=$(awk "BEGIN {printf \"%.1f\", $gpu_memory_used / $gpu_memory_total * 100}")
 #   if [ $(echo "$gpu_utilization > 70" | bc -l) -eq 1 ]; then
-#     bg_color="#[bg=#d70000]"  # 红色背景
+#     bg_color="#[bg=#d70000]"  # red bg
 #   elif [ $(echo "$gpu_utilization > 50" | bc -l) -eq 1 ]; then
-#     bg_color="#[bg=#ffff00]"   # 黄色背景
+#     bg_color="#[bg=#ffff00]"   # yellow bg
 #   else
-#     bg_color="#[bg=#5fff00]"   # 绿色背景
+#     bg_color="#[bg=#5fff00]"   # green bg
 #   fi
 #   printf "${bg_color} GPUs:%d U:%.1f%% M:%.1f%% #[default]" "$gpu_count" "$gpu_utilization" "$gpu_memory_percentage"
 #  }
